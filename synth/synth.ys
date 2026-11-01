@@ -1,0 +1,17 @@
+# Synthesise feed_handler for an AMD/Xilinx UltraScale+ FPGA (the family used on
+# many trading FPGA cards) and report resources and the critical path.
+# Run from the repo root:  make synth
+
+read_verilog -sv rtl/feed_handler.sv
+
+# -noiopad / -noclkbuf: this block sits inside a bigger design, so no I/O pins or
+# clock buffers are inserted for it
+synth_xilinx -family xcup -top feed_handler -noiopad -noclkbuf
+
+# Resource usage: LUTs, flip-flops (FDRE/FDSE), carry cells
+tee -q -o synth/report.txt stat
+
+# Critical path through the logic: the LUT levels between a register/input and a
+# register. Delays are Yosys's rough model (no routing), so treat the LUT count
+# as the real result and the picoseconds as a ballpark.
+tee -q -a synth/report.txt sta

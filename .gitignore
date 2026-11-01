@@ -1,0 +1,8 @@
+.venv/
+__pycache__/
+tb/sim_build/
+tb/results.xml
+tb/dump.vcd
+*.fst
+synth/report.txt
+.DS_Store
